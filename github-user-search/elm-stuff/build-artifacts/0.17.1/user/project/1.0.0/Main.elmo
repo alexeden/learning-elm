@@ -1,0 +1,168 @@
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Main$profilePic = function (model) {
+	var _p0 = model.avatar_url;
+	if (_p0.ctor === 'Nothing') {
+		return './not-found.jpg';
+	} else {
+		return _p0._0;
+	}
+};
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {name: a, avatar_url: b};
+	});
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: A2(_user$project$Main$Model, '', _elm_lang$core$Maybe$Nothing),
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Main$parseResponse = A3(
+	_elm_lang$core$Json_Decode$object2,
+	_user$project$Main$Model,
+	A2(_elm_lang$core$Json_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_elm_lang$core$Json_Decode_ops[':='], 'avatar_url', _elm_lang$core$Json_Decode$string)));
+var _user$project$Main$FetchFail = function (a) {
+	return {ctor: 'FetchFail', _0: a};
+};
+var _user$project$Main$FetchSucceed = function (a) {
+	return {ctor: 'FetchSucceed', _0: a};
+};
+var _user$project$Main$searchUser = function (str) {
+	var url = A2(_elm_lang$core$Basics_ops['++'], 'https://api.github.com/users/', str);
+	return A3(
+		_elm_lang$core$Task$perform,
+		_user$project$Main$FetchFail,
+		_user$project$Main$FetchSucceed,
+		A2(_evancz$elm_http$Http$get, _user$project$Main$parseResponse, url));
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'SearchString':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _user$project$Main$searchUser(_p1._0)
+				};
+			case 'FetchSucceed':
+				return {ctor: '_Tuple2', _0: _p1._0, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Main$Model, '', _elm_lang$core$Maybe$Nothing),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Main$SearchString = function (a) {
+	return {ctor: 'SearchString', _0: a};
+};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html_Attributes$class('mdl-grid')
+			]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('mdl-cell mdl-cell--6-col')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$input,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('mdl-textfield__input'),
+										_elm_lang$html$Html_Attributes$type$('text'),
+										_elm_lang$html$Html_Attributes$id('searchInput'),
+										_elm_lang$html$Html_Events$onInput(_user$project$Main$SearchString)
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[])),
+								A2(
+								_elm_lang$html$Html$label,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$for('searchInput')
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html$text('Search Github users')
+									]))
+							]))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('mdl-cell mdl-cell--6-col')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$div,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$class('mdl-card mdl-shadow--2dp')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								A2(
+								_elm_lang$html$Html$div,
+								_elm_lang$core$Native_List.fromArray(
+									[
+										_elm_lang$html$Html_Attributes$class('mdl-card__title'),
+										_elm_lang$html$Html_Attributes$style(
+										_elm_lang$core$Native_List.fromArray(
+											[
+												{
+												ctor: '_Tuple2',
+												_0: 'background',
+												_1: A2(
+													_elm_lang$core$Basics_ops['++'],
+													'url(\'',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														_user$project$Main$profilePic(model),
+														'\') center / cover'))
+											},
+												{ctor: '_Tuple2', _0: 'min-height', _1: '200px'}
+											]))
+									]),
+								_elm_lang$core$Native_List.fromArray(
+									[
+										A2(
+										_elm_lang$html$Html$h2,
+										_elm_lang$core$Native_List.fromArray(
+											[
+												_elm_lang$html$Html_Attributes$class('mdl-card__title-text')
+											]),
+										_elm_lang$core$Native_List.fromArray(
+											[
+												_elm_lang$html$Html$text(model.name)
+											]))
+									]))
+							]))
+					]))
+			]));
+};
+var _user$project$Main$main = {
+	main: _elm_lang$html$Html_App$program(
+		{init: _user$project$Main$init, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions, view: _user$project$Main$view})
+};
